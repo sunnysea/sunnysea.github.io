@@ -1,0 +1,60 @@
+#Linux 脚本
+
+###example.sh
+   #!/bin/sh #注解标记使用sh命令    
+   name=$1 #接收第一个参数    
+   echo "$name" #输出name
+   
+#Actors 模式
+  **适用用于计算密集型**    
+  **actor无状态**    
+  **actor并不是无状态，是顺序化执行任务**    
+  **利用邮箱存储任务**    
+  **将任务分割成多个actor实现并发**    
+  **Netty类似于Actors模型**    
+  **Netty使用channel串行执行任务，一条管道一个线程，Actors每个actor一个线程**
+  
+#lamda反射
+   
+       MethodHandles.Lookup lookup = MethodHandles.lookup();
+        try {
+            CallSite site = LambdaMetafactory.metafactory(lookup,
+                    "apply",
+                    MethodType.methodType(Person.class),
+                    MethodType.methodType(Object.class, Object.class),
+                    lookup.findVirtual(Person.class, "getName", MethodType.methodType(String.class)),
+                    MethodType.methodType(String.class, Person.class));
+           Function function = (Function) site.getTarget().invokeExact();
+            String name = (String) function.apply(person);
+            System.out.println(name);
+            
+ **比JDK反射快** 
+ 
+#Dumpclass 
+  **输出JVM里面的class文件**
+  
+#Interge
+    public static void main(String[] args) {
+       Integer f1 = 100, f2 = 100, f3 = 150, f4 = 150;
+
+        System.out.println(f1 == f2);//ture
+
+        System.out.println(f3 == f4);//false
+    }
+    
+如果整型字面量的值在-128到127之间，那么不会new新的Integer对象，而是直接引用常量池中的Integer对象
+
+#Sql
+###hql    
+不能使用limit
+
+###Sql 联表查询  
+    select e.*,a.channel,a.createdOn,a.loginOn from account a join
+    (select w.gold,d.* from wallet w join
+    (select v.charge,c.* from vip v join
+    (select p.`level`,b.* from player p join
+    ( select o.target,count(o.money) from chargeOrder o where o.completeAt between "2018-07-01 00:00:00" and "2018-07-32 23:59:59" group by o.target ) b on b.target = p.id
+    ) c on v.id = c.target
+    ) d on d.target = w.id
+    ) e on e.target = a.id
+    
