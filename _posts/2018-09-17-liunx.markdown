@@ -58,3 +58,32 @@
     ) d on d.target = w.id
     ) e on e.target = a.id
     
+
+
+#Timestamp
+   从数据库里面获取到的Date是Timestamp类型
+   Timestamp有两个equals
+   
+
+    public boolean equals(Timestamp ts) {
+        if (super.equals(ts)) {
+            if  (nanos == ts.nanos) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+    public boolean equals(java.lang.Object ts) {
+      if (ts instanceof Timestamp) {
+        return this.equals((Timestamp)ts);
+      } else {
+        return false;
+      }
+    }
+    
+  直接用timestamp.equals(Date) 会返回false
+
+    
